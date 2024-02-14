@@ -1,15 +1,15 @@
-const playlistSongs = document.getElementById("playlist-songs");
-const playButton = document.getElementById("play");
-const pauseButton = document.getElementById("pause");
-const nextButton = document.getElementById("next");
-const previousButton = document.getElementById("prev");
-const shuffleButton = document.getElementById("shuffle");
-const player = document.querySelector(".player");
-const coverImg = document.getElementById("cover-img");
-const playerSongTitle = document.getElementById("player-song-title");
-const playerSongArtist = document.getElementById("player-song-artist");
-const progress = document.querySelector(".progress");
-const progressContainer = document.querySelector(".progress-container");
+const playlistSongs = document.getElementById("playlist-songs")
+const playButton = document.getElementById("play")
+const pauseButton = document.getElementById("pause")
+const nextButton = document.getElementById("next")
+const previousButton = document.getElementById("prev")
+const shuffleButton = document.getElementById("shuffle")
+const player = document.querySelector(".player")
+const coverImg = document.getElementById("cover-img")
+const playerSongTitle = document.getElementById("player-song-title")
+const playerSongArtist = document.getElementById("player-song-artist")
+const progress = document.querySelector(".progress")
+const progressContainer = document.querySelector(".progress-container")
 
 const allSongs = [
   {
@@ -92,142 +92,143 @@ const allSongs = [
     src: "Chayanne-Bailando-Bachata",
     img: "Chayanne-Bailando-Bachata",
   },
-];
+]
 
-const audio = new Audio();
+const audio = new Audio()
 let myData = {
   songs: [...allSongs],
   mySong: null,
   myTime: 0,
-};
-
-let index = 0;
-
-function loadSong(song) {
-  playerSongTitle.innerText = song.title ? song.title : "";
-  playerSongArtist.innerText = song.artist ? song.artist : "";
-  audio.src = `songs/${song.src}.mp3`;
-  coverImg.src = `images/${song.img}.jpg`;
-  audio.autoplay = true;
 }
 
-loadSong(myData?.songs[index]);
+let index = 0
+
+function loadSong(song) {
+  playerSongTitle.innerText = song.title ? song.title : ""
+  playerSongArtist.innerText = song.artist ? song.artist : ""
+  audio.src = `songs/${song.src}.mp3`
+  coverImg.src = `images/${song.img}.jpg`
+  audio.autoplay = true
+}
+
+loadSong(myData?.songs[index])
 
 const playSong = (id) => {
-  const song = myData?.songs.find((song) => song.id === id);
+  const song = myData?.songs.find((song) => song.id === id)
 
   if (myData?.mySong === null || myData?.mySong.id !== song.id) {
-    audio.currentTime = 0;
+    audio.currentTime = 0
   } else {
-    audio.currentTime = myData.myTime;
+    audio.currentTime = myData.myTime
   }
-  myData.mySong = song;
-  player.classList.add("play");
-  highlightCurrentSong();
-  audio.src = `songs/${song.src}.mp3`;
-  coverImg.src = `images/${song.img}.jpg`;
-  audio.play();
-};
+  myData.mySong = song
+  player.classList.add("play")
+  highlightCurrentSong()
+  loadSong(myData?.songs[song.id])
+  // audio.src = `songs/${song.src}.mp3`;
+  // coverImg.src = `images/${song.img}.jpg`;
+  // audio.play();
+}
 
 const pauseSong = () => {
-  myData.myTime = audio.currentTime;
-  player.classList.remove("play");
-  audio.pause();
-};
+  myData.myTime = audio.currentTime
+  player.classList.remove("play")
+  audio.pause()
+}
 
 const playNextSong = () => {
   if (myData?.mySong === null) {
-    playSong(myData?.songs[0].id);
+    playSong(myData?.songs[0].id)
   } else {
-    index++;
+    index++
     if (index > myData?.songs?.length - 1) {
-      index = 0;
+      index = 0
     }
-    loadSong(myData?.songs[index]);
-    playSong(myData?.songs[index].id);
+    loadSong(myData?.songs[index])
+    playSong(myData?.songs[index].id)
   }
-};
+}
 
 const playPreviousSong = () => {
   if (myData?.mySong === null) {
-    return;
+    return
   } else {
-    index--;
+    index--
     if (index < 0) {
-      index = myData?.songs?.length - 1;
+      index = myData?.songs?.length - 1
     }
-    loadSong(myData?.songs[index]);
-    playSong(myData?.songs[index].id);
+    loadSong(myData?.songs[index])
+    playSong(myData?.songs[index].id)
   }
-};
+}
 
 function updateProgress(e) {
-  const { duration, currentTime } = e.srcElement;
-  const progressPercent = (currentTime / duration) * 100;
-  progress.style.width = `${progressPercent}%`;
+  const {duration, currentTime} = e.srcElement
+  const progressPercent = (currentTime / duration) * 100
+  progress.style.width = `${progressPercent}%`
 }
 
 function setProgress(e) {
-  const width = this.clientWidth;
-  console.log(width);
-  const clickX = e.offsetX;
-  console.log(clickX);
-  const duration = audio.duration;
+  const width = this.clientWidth
+  console.log(width)
+  const clickX = e.offsetX
+  console.log(clickX)
+  const duration = audio.duration
 
-  audio.currentTime = (clickX / width) * duration;
+  audio.currentTime = (clickX / width) * duration
 }
 
 const shuffle = () => {
-  shuffleButton.classList.toggle("shuffle");
-  myData?.songs.sort(() => Math.random() - 0.1);
-  myData.mySong = null;
-  myData.myTime = 0;
-  pauseSong();
-  renderSongs(myData?.songs);
-  loadSong(myData?.songs[index]);
-  playSong(myData?.songs[index].id);
-};
+  shuffleButton.classList.toggle("shuffle")
+  myData?.songs.sort(() => Math.random() - 0.1)
+  myData.mySong = null
+  myData.myTime = 0
+  pauseSong()
+  renderSongs(myData?.songs)
+  loadSong(myData?.songs[index])
+  playSong(myData?.songs[index].id)
+}
 
 const highlightCurrentSong = () => {
-  const playlistSongElements = document.querySelectorAll(".playlist-song");
-  const songToHighlight = document.getElementById(`song-${myData?.mySong?.id}`);
+  const playlistSongElements = document.querySelectorAll(".playlist-song")
+  const songToHighlight = document.getElementById(`song-${myData?.mySong?.id}`)
   playlistSongElements.forEach((songEl) => {
-    songEl.removeAttribute("aria-current");
-  });
+    songEl.removeAttribute("aria-current")
+  })
   if (songToHighlight) {
-    songToHighlight.setAttribute("aria-current", "true");
+    songToHighlight.setAttribute("aria-current", "true")
   }
-};
+}
 
 const deleteSong = (id) => {
   if (myData?.mySongSong?.id === id) {
-    myData.mySong = null;
-    myData.myTime = 0;
-    playerSongTitle.innerText = "";
-    playerSongArtist.innerText = "";
-    pauseSong();
+    myData.mySong = null
+    myData.myTime = 0
+    playerSongTitle.innerText = ""
+    playerSongArtist.innerText = ""
+    pauseSong()
   }
-  myData.songs = myData?.songs.filter((song) => song.id !== id);
-  pauseSong();
-  renderSongs(myData.songs);
-  highlightCurrentSong();
+  myData.songs = myData?.songs.filter((song) => song.id !== id)
+  pauseSong()
+  renderSongs(myData.songs)
+  highlightCurrentSong()
 
   if (myData?.songs?.length === 0 || myData.mySong === null) {
-    pauseSong();
-    const resetButton = document.createElement("button");
-    const resetText = document.createTextNode("Reset Playlist");
-    resetButton.classList.add("reset-btn");
-    resetButton.id = "reset";
-    resetButton.ariaLabel = "Reset playlist";
-    resetButton.appendChild(resetText);
-    playlistSongs.appendChild(resetButton);
+    pauseSong()
+    const resetButton = document.createElement("button")
+    const resetText = document.createTextNode("Reset Playlist")
+    resetButton.classList.add("reset-btn")
+    resetButton.id = "reset"
+    resetButton.ariaLabel = "Reset playlist"
+    resetButton.appendChild(resetText)
+    playlistSongs.appendChild(resetButton)
     resetButton.addEventListener("click", () => {
-      myData.songs = [...allSongs];
-      renderSongs(myData?.songs);
-      resetButton.remove();
-    });
+      myData.songs = [...allSongs]
+      renderSongs(myData?.songs)
+      resetButton.remove()
+    })
   }
-};
+}
 
 // Render music
 const renderSongs = (array) => {
@@ -241,42 +242,42 @@ const renderSongs = (array) => {
           <i onclick="deleteSong(${song.id})" class="playlist-song-delete fas fa-trash" aria-label="Delete${song.title}"></i>
         </li>
         
-      `;
+      `
     })
-    .join("");
-  playlistSongs.innerHTML = songsHtml;
-};
+    .join("")
+  playlistSongs.innerHTML = songsHtml
+}
 
 // Events
 playButton.addEventListener("click", () => {
   if (myData?.mySong === null) {
-    playSong(myData?.songs[0].id);
+    playSong(myData?.songs[0].id)
   } else {
-    playSong(myData?.mySong?.id);
+    playSong(myData?.mySong?.id)
   }
 
-  const isPlaying = player.classList.contains("play");
+  const isPlaying = player.classList.contains("play")
   if (isPlaying) {
-    playSong(myData?.mySong?.id);
+    playSong(myData?.mySong?.id)
   } else {
-    pauseSong();
+    pauseSong()
   }
-});
+})
 
 pauseButton.addEventListener("click", () => {
-  const isPlaying = player.classList.contains("play");
+  const isPlaying = player.classList.contains("play")
   if (isPlaying) {
-    pauseSong();
+    pauseSong()
   } else {
-    playSong(myData.mySong?.id);
+    playSong(myData.mySong?.id)
   }
-});
+})
 
-nextButton.addEventListener("click", playNextSong);
-previousButton.addEventListener("click", playPreviousSong);
-shuffleButton.addEventListener("click", shuffle);
-audio.addEventListener("timeupdate", updateProgress);
-progressContainer.addEventListener("click", setProgress);
-audio.addEventListener("ended", playNextSong);
+nextButton.addEventListener("click", playNextSong)
+previousButton.addEventListener("click", playPreviousSong)
+shuffleButton.addEventListener("click", shuffle)
+audio.addEventListener("timeupdate", updateProgress)
+progressContainer.addEventListener("click", setProgress)
+audio.addEventListener("ended", playNextSong)
 
-renderSongs(myData?.songs);
+renderSongs(myData?.songs)
